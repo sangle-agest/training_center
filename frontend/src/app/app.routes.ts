@@ -6,6 +6,7 @@ import { CoursesComponent } from './components/admin/courses/courses';
 import { CourseFormComponent } from './components/admin/course-form/course-form';
 import { LessonEditorComponent } from './components/admin/lesson-editor/lesson-editor';
 import { LessonFormComponent } from './components/admin/lesson-form/lesson-form';
+import { LessonViewComponent as AdminLessonViewComponent } from './components/admin/lesson-view/lesson-view';
 import { MyCoursesComponent } from './components/learner/my-courses/my-courses';
 import { CourseViewComponent } from './components/learner/course-view/course-view';
 import { LessonViewComponent } from './components/learner/lesson-view/lesson-view';
@@ -26,6 +27,7 @@ export const routes: Routes = [
       { path: 'courses/:id/manage', component: LessonEditorComponent },
       { path: 'lessons/create', component: LessonFormComponent },
       { path: 'lessons/:id/edit', component: LessonFormComponent },
+      { path: 'lessons/:id/view', component: AdminLessonViewComponent },
     ]
   },
   

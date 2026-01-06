@@ -13,6 +13,8 @@ export function initializeAuth(authService: AuthService) {
     // This ensures AuthService is instantiated and localStorage is read before routing begins
     console.log('APP_INITIALIZER: Auth state initialized');
     console.log('APP_INITIALIZER: User authenticated:', authService.isAuthenticated());
+    console.log('APP_INITIALIZER: Current user:', authService.currentUserValue);
+    console.log('APP_INITIALIZER: Token exists:', !!authService.token);
     return Promise.resolve();
   };
 }

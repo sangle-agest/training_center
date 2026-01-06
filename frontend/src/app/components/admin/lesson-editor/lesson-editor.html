@@ -70,6 +70,9 @@
                 </div>
               </div>
               <div class="lesson-actions">
+                <button class="btn-sm btn-view" [routerLink]="['/admin/lessons', lesson.id, 'view']">
+                  👁 View
+                </button>
                 <button class="btn-sm btn-edit" (click)="editLesson(lesson)">
                   ✎ Edit
                 </button>

@@ -20,6 +20,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me', [AuthController::class, 'me']);
 
+    // Shared routes (both admin and learner can view content)
+    Route::middleware('role:admin,learner')->group(function () {
+        // View lessons and files
+        Route::get('/lessons/{id}', [LessonController::class, 'show']);
+        Route::get('/lessons/{id}/files', [FileUploadController::class, 'getLessonFiles']);
+        Route::get('/files/{id}/download', [FileUploadController::class, 'downloadFile']);
+    });
+
     // Admin routes
     Route::middleware('role:admin')->group(function () {
         // Courses
@@ -30,13 +38,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('categories', CategoryController::class);
         Route::post('/categories/reorder', [CategoryController::class, 'reorder']);
 
-        // Lessons
-        Route::apiResource('lessons', LessonController::class);
+        // Lessons (admin can create/update/delete)
+        Route::get('/lessons', [LessonController::class, 'index']);
+        Route::post('/lessons', [LessonController::class, 'store']);
+        Route::put('/lessons/{id}', [LessonController::class, 'update']);
+        Route::delete('/lessons/{id}', [LessonController::class, 'destroy']);
 
         // File uploads
         Route::post('/upload/image', [FileUploadController::class, 'uploadImage']);
         Route::post('/lessons/{id}/files', [FileUploadController::class, 'uploadLessonFile']);
-        Route::get('/lessons/{id}/files', [FileUploadController::class, 'getLessonFiles']);
         Route::delete('/files/{id}', [FileUploadController::class, 'deleteFile']);
 
         // Assignments
@@ -54,17 +64,9 @@ Route::middleware('auth:sanctum')->group(function () {
         // View course content
         Route::get('/courses/{id}', [CourseController::class, 'show']);
         Route::get('/courses/{id}/tree', [CourseController::class, 'tree']);
-        Route::get('/lessons/{id}', [LessonController::class, 'show']);
-        Route::get('/lessons/{id}/files', [FileUploadController::class, 'getLessonFiles']);
-        
-        // Download files
-        Route::get('/files/{id}/download', [FileUploadController::class, 'downloadFile']);
         
         // Progress tracking
         Route::post('/progress/lesson/{id}', [ProgressController::class, 'toggleLessonProgress']);
     });
-
-    // Shared routes (both admin and learner)
-    Route::get('/files/{id}/download', [FileUploadController::class, 'downloadFile']);
 });
 

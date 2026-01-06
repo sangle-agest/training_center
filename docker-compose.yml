@@ -12,7 +12,7 @@ services:
       MYSQL_USER: training_user
       MYSQL_PASSWORD: training_password
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -50,7 +50,6 @@ services:
       sh -c "composer install &&
              php artisan key:generate &&
              php artisan migrate --force &&
-             php artisan db:seed --force &&
              php artisan serve --host=0.0.0.0 --port=8000"
 
   # Angular Frontend

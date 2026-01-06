@@ -1,0 +1,119 @@
+<div class="admin-layout">
+  <header class="admin-header">
+    <div class="header-content">
+      <h1 class="header-title">Training Center - Admin</h1>
+      <div class="header-actions">
+        <span class="user-name">{{ authService.currentUserValue?.name }}</span>
+        <button class="logout-btn" (click)="logout()">
+          <span class="logout-icon">⎋</span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="lesson-content">
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">{{ lesson?.title }}</h2>
+        <p class="page-subtitle">Lesson Preview</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-secondary" (click)="editLesson()">
+          ✎ Edit Lesson
+        </button>
+        <button class="btn-back" (click)="goBack()">
+          ← Back
+        </button>
+      </div>
+    </div>
+
+    <div class="alert alert-success" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <div class="alert alert-error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="content-container" *ngIf="!loading && lesson">
+      <!-- Lesson Content -->
+      <div class="lesson-content-card">
+        <h3 class="section-title">Lesson Content</h3>
+        <div class="lesson-html-content" [innerHTML]="lesson.content"></div>
+      </div>
+
+      <!-- Attachments Section -->
+      <div class="attachments-card">
+        <div class="attachments-header">
+          <h3 class="section-title">Attachments ({{ files.length }})</h3>
+          <label class="btn-primary" [class.disabled]="uploadingFile">
+            <input 
+              type="file" 
+              (change)="onFileSelected($event)" 
+              [disabled]="uploadingFile"
+              style="display: none"
+            />
+            <span *ngIf="!uploadingFile">+ Upload File</span>
+            <span *ngIf="uploadingFile">Uploading...</span>
+          </label>
+        </div>
+
+        <!-- Upload Progress -->
+        <div class="upload-progress" *ngIf="uploadingFile">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="uploadProgress"></div>
+          </div>
+          <span class="progress-text">{{ uploadProgress }}%</span>
+        </div>
+
+        <!-- Files List -->
+        <div class="files-list" *ngIf="files.length > 0">
+          <div class="file-item" *ngFor="let file of files">
+            <div class="file-info">
+              <span class="file-icon">{{ getFileIcon(file.mime_type) }}</span>
+              <div class="file-details">
+                <span class="file-name">{{ file.original_name }}</span>
+                <span class="file-meta">{{ formatFileSize(file.file_size) }} • {{ file.uploaded_at | date:'short' }}</span>
+              </div>
+            </div>
+            <div class="file-actions">
+              <button 
+                class="btn-icon btn-download" 
+                (click)="downloadFile(file)"
+                title="Download"
+              >
+                ⬇
+              </button>
+              <button 
+                class="btn-icon btn-replace" 
+                (click)="replaceFile(file)"
+                title="Replace"
+              >
+                🔄
+              </button>
+              <button 
+                class="btn-icon btn-delete" 
+                (click)="deleteFile(file)"
+                title="Delete"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-files" *ngIf="files.length === 0 && !uploadingFile">
+          <div class="empty-icon">📎</div>
+          <p>No attachments yet</p>
+          <p class="empty-hint">Upload files to share with learners</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="loading-state" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Loading lesson...</p>
+    </div>
+  </main>
+</div>
