@@ -1,0 +1,76 @@
+<div class="admin-layout">
+  <header class="admin-header">
+    <div class="header-content">
+      <h1 class="header-title">Training Center - Admin</h1>
+      <div class="header-actions">
+        <span class="user-name">{{ authService.currentUserValue?.name }}</span>
+        <button class="logout-btn" (click)="logout()">
+          <span class="logout-icon">⎋</span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-content">
+    <h2 class="dashboard-title">Admin Dashboard</h2>
+    
+    <div class="cards-grid">
+      <div class="dashboard-card" routerLink="/admin/courses">
+        <div class="card-icon courses-icon">
+          <span>📚</span>
+        </div>
+        <div class="card-body">
+          <h3>Courses</h3>
+          <p class="card-subtitle">Manage all courses</p>
+          <p class="card-description">Create, edit, and organize training courses</p>
+        </div>
+        <div class="card-footer">
+          <span class="card-link">View Courses →</span>
+        </div>
+      </div>
+
+      <div class="dashboard-card">
+        <div class="card-icon categories-icon">
+          <span>📁</span>
+        </div>
+        <div class="card-body">
+          <h3>Categories</h3>
+          <p class="card-subtitle">Organize content</p>
+          <p class="card-description">Manage course categories and structure</p>
+        </div>
+        <div class="card-footer">
+          <span class="card-link">Manage →</span>
+        </div>
+      </div>
+
+      <div class="dashboard-card">
+        <div class="card-icon assignments-icon">
+          <span>📋</span>
+        </div>
+        <div class="card-body">
+          <h3>Assignments</h3>
+          <p class="card-subtitle">Course enrollment</p>
+          <p class="card-description">Assign courses to learners</p>
+        </div>
+        <div class="card-footer">
+          <span class="card-link">Assign →</span>
+        </div>
+      </div>
+
+      <div class="dashboard-card">
+        <div class="card-icon learners-icon">
+          <span>👥</span>
+        </div>
+        <div class="card-body">
+          <h3>Learners</h3>
+          <p class="card-subtitle">User management</p>
+          <p class="card-description">View and manage learner accounts</p>
+        </div>
+        <div class="card-footer">
+          <span class="card-link">View Users →</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

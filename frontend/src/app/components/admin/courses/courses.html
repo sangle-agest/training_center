@@ -1,0 +1,128 @@
+<div class="admin-layout">
+  <header class="admin-header">
+    <div class="header-content">
+      <h1 class="header-title">Training Center - Admin</h1>
+      <div class="header-actions">
+        <span class="user-name">{{ authService.currentUserValue?.name }}</span>
+        <button class="logout-btn" (click)="logout()">
+          <span class="logout-icon">⎋</span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="courses-content">
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">Courses</h2>
+        <p class="page-subtitle">Manage your training courses</p>
+      </div>
+      <div class="header-actions-right">
+        <div class="view-toggle">
+          <button 
+            class="toggle-btn" 
+            [class.active]="viewMode === 'card'" 
+            (click)="toggleView('card')"
+            title="Card View">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+            </svg>
+          </button>
+          <button 
+            class="toggle-btn" 
+            [class.active]="viewMode === 'table'" 
+            (click)="toggleView('table')"
+            title="Table View">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <button routerLink="/admin/courses/create" class="create-btn">
+          <span>+</span> Create Course
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="courses.length === 0" class="empty-state">
+      <div class="empty-icon">📚</div>
+      <h3>No courses yet</h3>
+      <p>Create your first course to get started</p>
+      <button routerLink="/admin/courses/create" class="create-btn-primary">Create Course</button>
+    </div>
+
+    <div class="courses-grid" *ngIf="courses.length > 0 && viewMode === 'card'">
+      <div *ngFor="let course of courses" class="course-card">
+        <div class="course-header">
+          <h3>{{ course.title }}</h3>
+          <span class="status-badge" [class.active]="course.is_active" [class.inactive]="!course.is_active">
+            {{ course.is_active ? '✓ Active' : '○ Inactive' }}
+          </span>
+        </div>
+        <p class="course-description">{{ course.description }}</p>
+        <div class="course-meta">
+          <span class="meta-label">Created by:</span>
+          <span class="meta-value">{{ course.creator?.name || 'Unknown' }}</span>
+        </div>
+        <div class="course-footer">
+          <button [routerLink]="['/admin/courses', course.id, 'manage']" class="btn-manage">
+            📚 Manage
+          </button>
+          <button [routerLink]="['/admin/courses', course.id, 'edit']" class="btn-edit">
+            ✎ Edit
+          </button>
+          <button (click)="deleteCourse(course.id)" class="btn-delete">
+            × Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-container" *ngIf="courses.length > 0 && viewMode === 'table'">
+      <table class="courses-table">
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Created By</th>
+            <th>Created At</th>
+            <th class="actions-column">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let course of courses">
+            <td>
+              <span class="status-badge" [class.active]="course.is_active" [class.inactive]="!course.is_active">
+                {{ course.is_active ? '✓ Active' : '○ Inactive' }}
+              </span>
+            </td>
+            <td class="title-cell">{{ course.title }}</td>
+            <td class="description-cell">{{ course.description }}</td>
+            <td>{{ course.creator?.name || 'Unknown' }}</td>
+            <td>{{ course.created_at | date:'short' }}</td>
+            <td class="actions-column">
+              <div class="table-actions">
+                <button [routerLink]="['/admin/courses', course.id, 'manage']" class="btn-icon btn-manage" title="Manage Content">
+                  📚
+                </button>
+                <button [routerLink]="['/admin/courses', course.id, 'edit']" class="btn-icon btn-edit" title="Edit">
+                  ✎
+                </button>
+                <button (click)="deleteCourse(course.id)" class="btn-icon btn-delete" title="Delete">
+                  ×
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>

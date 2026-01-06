@@ -1,0 +1,56 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h1>Training Center</h1>
+      <h2>Login</h2>
+    </div>
+    
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form">
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          [(ngModel)]="credentials.email"
+          required
+          email
+          placeholder="admin@training.com"
+          class="form-input"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="credentials.password"
+          required
+          placeholder="password"
+          class="form-input"
+        />
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="!loginForm.form.valid || loading"
+        class="login-button"
+      >
+        <span *ngIf="loading">Logging in...</span>
+        <span *ngIf="!loading">Login</span>
+      </button>
+    </form>
+
+    <div class="demo-info">
+      <p class="demo-title">Demo Accounts:</p>
+      <p>Admin: <strong>admin@training.com</strong> / password</p>
+      <p>Learner: <strong>learner@training.com</strong> / password</p>
+    </div>
+  </div>
+</div>

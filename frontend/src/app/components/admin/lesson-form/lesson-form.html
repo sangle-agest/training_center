@@ -1,0 +1,97 @@
+<div class="admin-layout">
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="header-content">
+      <h1 class="header-title">Training Center</h1>
+      <div class="header-actions">
+      <span class="user-name">{{ (authService.currentUser | async)?.name }}</span>
+        <button class="logout-btn" (click)="logout()">
+          <span>🚪</span>
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="form-content">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">{{ isEditMode ? 'Edit Lesson' : 'Create New Lesson' }}</h2>
+        <p class="page-subtitle">{{ isEditMode ? 'Update lesson details and content' : 'Add a new lesson to your course' }}</p>
+      </div>
+      <button class="btn-back" (click)="goBack()">
+        <span>←</span> Back to Course
+      </button>
+    </div>
+
+    <!-- Alert Messages -->
+    <div class="alert alert-error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+    <div class="alert alert-success" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <!-- Form Container -->
+    <div class="form-container">
+      <form [formGroup]="lessonForm" (ngSubmit)="onSubmit()">
+        <!-- Title -->
+        <div class="form-group">
+          <label for="title">Lesson Title <span class="required">*</span></label>
+          <input
+            type="text"
+            id="title"
+            formControlName="title"
+            class="form-control"
+            placeholder="Enter lesson title"
+          />
+          <small class="form-hint">Give your lesson a clear and descriptive title</small>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+          <label for="category_id">Category <span class="required">*</span></label>
+          <select
+            id="category_id"
+            formControlName="category_id"
+            class="form-control"
+          >
+            <option [value]="null">Select a category</option>
+            <option *ngFor="let category of categories" [value]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+          <small class="form-hint">Choose the category this lesson belongs to</small>
+        </div>
+
+        <!-- Content Editor -->
+        <div class="form-group">
+          <label for="content">Content <span class="required">*</span></label>
+          <div class="editor-wrapper">
+            <div class="NgxEditor__Wrapper">
+              <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
+              <ngx-editor
+                [editor]="editor"
+                formControlName="content"
+                [placeholder]="'Start writing your lesson content...'"
+              ></ngx-editor>
+            </div>
+          </div>
+          <small class="form-hint">Use the editor toolbar to format your content with text styles, lists, images, and more</small>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="goBack()">
+            Cancel
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="lessonForm.invalid">
+            {{ isEditMode ? 'Update Lesson' : 'Create Lesson' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
