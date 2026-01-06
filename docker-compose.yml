@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: training_center_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: training_center
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: training_user
+      MYSQL_PASSWORD: training_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - training_network
+
+  # Laravel Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: training_center_backend
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+      - ./backend/storage:/var/www/storage
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: training_center
+      DB_USERNAME: training_user
+      DB_PASSWORD: training_password
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:8000
+      FRONTEND_URL: http://localhost:4200
+    networks:
+      - training_network
+    command: >
+      sh -c "composer install &&
+             php artisan key:generate &&
+             php artisan migrate --force &&
+             php artisan db:seed --force &&
+             php artisan serve --host=0.0.0.0 --port=8000"
+
+  # Angular Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: training_center_frontend
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: development
+    networks:
+      - training_network
+    command: npm start
+
+networks:
+  training_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
